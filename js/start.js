@@ -1,13 +1,23 @@
-(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
-$(document).ready(function() {
+(function () {
+    var script = document.createElement('script');
+    script.onload = function () {
+        var stats = new Stats();
+        document.body.appendChild(stats.dom);
+        requestAnimationFrame(function loop() {
+            stats.update();
+            requestAnimationFrame(loop)
+        });
+    };
+    script.src = 'js/stats.min.js';
+    document.head.appendChild(script);
+})()
+$(document).ready(function () {
     scene = new THREE.Scene();
 
     //CanvasRenderer
-     renderer = new THREE.WebGLRenderer ({
+    renderer = new THREE.WebGLRenderer({
         antialias: true
     });
-    // renderer = new THREE.WebGLRenderer();
-
     renderer.autoClear = true;
     renderer.sortObjects = true;
     renderer.generateMipmaps = true;
@@ -24,24 +34,15 @@ $(document).ready(function() {
     $('#WebGL-output').html(renderer.domElement)
 });
 
-start.prototype.destroy = function()
-{
-    scene.remove( this.particleMesh );
-}
 //function for acceleration
 function getA(V1, V2, B1, B2, qDELm, E) {
-    return (parseFloat(qDELm)*
-        (parseFloat(parseFloat(V1)*parseFloat(B1))
-            -
-            parseFloat(
-                parseFloat(V2)*parseFloat(B2)
-            )
-            +
-            parseFloat(E)))
+    return (parseFloat(qDELm) * (parseFloat(parseFloat(V1) * parseFloat(B1)) - parseFloat(parseFloat(V2) * parseFloat(B2)) + parseFloat(E)))
 }
+
 //function for coordinates
 function getCord(cord0, V, dt, a) {
-    return (parseFloat(parseFloat(cord0) + parseFloat(parseFloat(V) * parseFloat(dt)) + parseFloat((parseFloat(a) * parseFloat(parseFloat(dt) * parseFloat(dt)) * 0.5))));}
+    return (parseFloat(parseFloat(cord0) + parseFloat(parseFloat(V) * parseFloat(dt)) + parseFloat((parseFloat(a) * parseFloat(parseFloat(dt) * parseFloat(dt)) * 0.5))));
+}
 
 //main function
 function start() {
@@ -49,48 +50,35 @@ function start() {
     // sphere.detach();
     // language=JQuery-CSS
     var X0 = new $('#X0').val(); /*Get start coordinates*/
-    var Y0 =new $('#Y0').val();
-    var Z0 =new $('#Z0').val();
+    var Y0 = new $('#Y0').val();
+    var Z0 = new $('#Z0').val();
 
-    var VX =new $('#VX').val(); /*Get start velocity projection */
-    var VY =new $('#VY').val();
-    var VZ =new $('#VZ').val();
+    var VX = new $('#VX').val(); /*Get start velocity projection */
+    var VY = new $('#VY').val();
+    var VZ = new $('#VZ').val();
 
-    var Ex =new $('#Ex').val(); /*Get start electric field projection*/
-    var Ey =new $('#Ey').val();
-    var Ez =new $('#Ez').val();
+    var Ex = new $('#Ex').val(); /*Get start electric field projection*/
+    var Ey = new $('#Ey').val();
+    var Ez = new $('#Ez').val();
 
-    var Bx =new $('#Bx').val(); /*Get start magnetic field projection*/
-    var By =new $('#By').val();
-    var Bz =new $('#Bz').val();
+    var Bx = new $('#Bx').val(); /*Get start magnetic field projection*/
+    var By = new $('#By').val();
+    var Bz = new $('#Bz').val();
 
     var dt = new $('#dt').val(); /*Get dt*/
-    var t =new $('#t').val(); /*Get t*/
-    var qDELm =new $('#q').val() / $('#m').val(); /*Get const "q" divided "m" */
+    var t = new $('#t').val(); /*Get t*/
+    var qDELm = new $('#q').val() / $('#m').val(); /*Get const "q" divided "m" */
 
     var ax, ay, az; /*for algorithm*/
     var x, y, z;
 
-    while(scene.children.length > 0){
+    while (scene.children.length > 0) {
         scene.remove(scene.children[0]);
     }
 
-
-
-
-    /*Create scene(space scene)*/
-    // var scene = new THREE.Scene();
-
-    /*Create light and set position*/
-/*    var light = new THREE.PointLight();
-    light.position.set(0, 20, 50);
-    scene.add(light); //add light*/
-
-
-
     //start creating vector
     //material vector (color)
-    var material = new THREE.LineBasicMaterial({ color: 0xffb02e });
+    var material = new THREE.LineBasicMaterial({color: 0xffb02e});
     /*we take the coordinates after the first tick of the algorithm and build a vector*/
     var geometry = new THREE.Geometry();
     //first coordinates
@@ -98,14 +86,14 @@ function start() {
 
 
     ax = getA(VY, VZ, Bz, By, qDELm, Ex);
-    ay = getA(VZ,VX ,Bx , Bz, qDELm, Ey);
+    ay = getA(VZ, VX, Bx, Bz, qDELm, Ey);
     az = getA(VX, VY, By, Bx, qDELm, Ez);
 
     x = getCord(X0, VX, dt, ax);
     y = getCord(Y0, VY, dt, ay);
     z = getCord(Z0, VZ, dt, az);
     //second coordinates (increased by 1000 for clarity on 3d graf)
-    geometry.vertices.push(new THREE.Vector3((parseFloat(x))*1000.0, (parseFloat(y))*1000.0, (parseFloat(z))*1000.0));
+    geometry.vertices.push(new THREE.Vector3((parseFloat(x)) * 1000.0, (parseFloat(y)) * 1000.0, (parseFloat(z)) * 1000.0));
     //create vector
     var line = new THREE.Line(geometry, material);
     line.type.big().bold();
@@ -134,17 +122,12 @@ function start() {
     var sphereMaterial = new THREE.MeshBasicMaterial(
         {color: 0xfafafa, wireframe: true});
 
-/*    var spriteOpts={}
-    spriteOpts = {color: 0xffffff};
-    var  materiala = new THREE.SpriteMaterial(spriteOpts);*/
-
-
     /*algorithm: until the end of "t" build points*/
     //t-dt!!! after tick algorithm
     while (t > 0) {
         //function for get "a"
         ax = getA(VY, VZ, Bz, By, qDELm, Ex);
-        ay = getA(VZ,VX ,Bx , Bz, qDELm, Ey);
+        ay = getA(VZ, VX, Bx, Bz, qDELm, Ey);
         az = getA(VX, VY, By, Bx, qDELm, Ez);
         //function for get coordinates
         x = getCord(X0, VX, dt, ax);
@@ -159,9 +142,9 @@ function start() {
         scene.add(sphere);
 
         //set new coordinates and speed; parseFloat() - bad coding :(
-        VX = parseFloat(parseFloat(parseFloat(ax) * parseFloat(dt))+parseFloat(VX));
-        VY = parseFloat(parseFloat(parseFloat(ay) * parseFloat(dt))+parseFloat(VY));
-        VZ = parseFloat(parseFloat(parseFloat(az) * parseFloat(dt))+parseFloat(VZ));
+        VX = parseFloat(parseFloat(parseFloat(ax) * parseFloat(dt)) + parseFloat(VX));
+        VY = parseFloat(parseFloat(parseFloat(ay) * parseFloat(dt)) + parseFloat(VY));
+        VZ = parseFloat(parseFloat(parseFloat(az) * parseFloat(dt)) + parseFloat(VZ));
 
         X0 = x;
         Y0 = y;
@@ -169,12 +152,6 @@ function start() {
 
         t -= parseFloat(dt); //reduce "t"
     }
-        //set render on web page (html page on id="WebGL-output")
-        // $('#WebGL-output').html(renderer.domElement)
-    // renderer.render(scene, camera);
-
-    /*    $('#WebGL-output').empty()
-        $('#WebGL-output').append(renderer.domElement);*/
 
     //for move camera
     function animate() {
@@ -182,5 +159,6 @@ function start() {
         controls.update();
         renderer.render(scene, camera);
     }
+
     animate();
 }
