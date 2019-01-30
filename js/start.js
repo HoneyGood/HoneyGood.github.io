@@ -1,19 +1,56 @@
+(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+$(document).ready(function() {
+    scene = new THREE.Scene();
 
+    //CanvasRenderer
+     renderer = new THREE.WebGLRenderer ({
+        antialias: true
+    });
+    // renderer = new THREE.WebGLRenderer();
+
+    renderer.autoClear = true;
+    renderer.sortObjects = true;
+    renderer.generateMipmaps = true;
+    renderer.setClearColor(0x1B1E21, 1);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    /*Create camera and set position*/
+    camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 50);
+    camera.position.set(20, 5, 30);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    $('#WebGL-output').html(renderer.domElement)
+});
+
+start.prototype.destroy = function()
+{
+    scene.remove( this.particleMesh );
+}
 //function for acceleration
 function getA(V1, V2, B1, B2, qDELm, E) {
-    return (parseFloat(qDELm)*(parseFloat(parseFloat(V1)*parseFloat(B1))-parseFloat(parseFloat(V2)*parseFloat(B2))+parseFloat(E)))
+    return (parseFloat(qDELm)*
+        (parseFloat(parseFloat(V1)*parseFloat(B1))
+            -
+            parseFloat(
+                parseFloat(V2)*parseFloat(B2)
+            )
+            +
+            parseFloat(E)))
 }
 //function for coordinates
 function getCord(cord0, V, dt, a) {
-    return parseFloat(parseFloat(cord0) + parseFloat(parseFloat(V) * parseFloat(dt)) + parseFloat((parseFloat(a) * parseFloat(parseFloat(dt) * parseFloat(dt)) * 0.5)));}
+    return (parseFloat(parseFloat(cord0) + parseFloat(parseFloat(V) * parseFloat(dt)) + parseFloat((parseFloat(a) * parseFloat(parseFloat(dt) * parseFloat(dt)) * 0.5))));}
 
 //main function
 function start() {
 
+    // sphere.detach();
     // language=JQuery-CSS
     var X0 = new $('#X0').val(); /*Get start coordinates*/
     var Y0 =new $('#Y0').val();
-    var Z0 = $('#Z0').val();
+    var Z0 =new $('#Z0').val();
 
     var VX =new $('#VX').val(); /*Get start velocity projection */
     var VY =new $('#VY').val();
@@ -34,25 +71,22 @@ function start() {
     var ax, ay, az; /*for algorithm*/
     var x, y, z;
 
-    /*Create camera and set position*/
-    var camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 100);
-    camera.position.set(20, 5, 30);
+    while(scene.children.length > 0){
+        scene.remove(scene.children[0]);
+    }
+
+
+
 
     /*Create scene(space scene)*/
-    var scene = new THREE.Scene();
+    // var scene = new THREE.Scene();
 
     /*Create light and set position*/
-    var light = new THREE.PointLight();
+/*    var light = new THREE.PointLight();
     light.position.set(0, 20, 50);
-    scene.add(light); //add light
+    scene.add(light); //add light*/
 
 
-    var renderer = renderer = new THREE.WebGLRenderer({
-        antialias: true
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     //start creating vector
     //material vector (color)
@@ -96,9 +130,14 @@ function start() {
     sphereBase.position.z = Z0;
     scene.add(sphereBase);
     //graph points(spheres) parameters          (radius,line on top, bottom)-look like line
-    var sphereGeometry = new THREE.SphereGeometry(.01, .01, .01);
+    var sphereGeometry = new THREE.SphereGeometry(.001, 0, 0);
     var sphereMaterial = new THREE.MeshBasicMaterial(
-        {color: 0xFF00FF, wireframe: true});
+        {color: 0xfafafa, wireframe: true});
+
+/*    var spriteOpts={}
+    spriteOpts = {color: 0xffffff};
+    var  materiala = new THREE.SpriteMaterial(spriteOpts);*/
+
 
     /*algorithm: until the end of "t" build points*/
     //t-dt!!! after tick algorithm
@@ -111,8 +150,6 @@ function start() {
         x = getCord(X0, VX, dt, ax);
         y = getCord(Y0, VY, dt, ay);
         z = getCord(Z0, VZ, dt, az);
-
-
 
         //create tiny sphere
         var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
@@ -133,7 +170,11 @@ function start() {
         t -= parseFloat(dt); //reduce "t"
     }
         //set render on web page (html page on id="WebGL-output")
-        $('#WebGL-output').html(renderer.domElement)
+        // $('#WebGL-output').html(renderer.domElement)
+    // renderer.render(scene, camera);
+
+    /*    $('#WebGL-output').empty()
+        $('#WebGL-output').append(renderer.domElement);*/
 
     //for move camera
     function animate() {

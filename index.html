@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru" >
-    <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<html lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-		<title>Korzhov</title>
+    <title>Korzhov</title>
 
     <!--LIBRARIES-->
     <script src="https://threejs.org/build/three.js"></script>
@@ -22,7 +22,6 @@
     <script type="text/javascript" src="js/start.js"></script>
 
 
-
     <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r72/three.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>-->
 
@@ -37,7 +36,7 @@
     <div class="collapse navbar-collapse" id="navbarCollapse"> >
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link " onclick="start()" href="#">Show</a>
+                <a class="nav-link " onclick="start();" href="#">Show</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link active" href="#" data-toggle="modal"
@@ -51,10 +50,11 @@
     </div>
 </nav>
 <!--Modal -->
-<div class="modal fade" id="modalDLG" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalDLG" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="pointer-events: auto;">
         <div class="card"><!--col-6 style="width: 100%; max-width: 50%;"-->
-            <table class="table top-cover " >
+            <table class="table top-cover ">
                 <thead>
                 <tr style=" text-align: center;">
                     <th>Входные данные</th>
@@ -69,7 +69,7 @@
                         Координаты начала
                     </th>
                     <th>
-                        <input type="text" ID="X0" value="0" placeholder="Enter X0" >
+                        <input type="text" ID="X0" value="0" placeholder="Enter X0">
                     </th>
                     <th>
                         <input type="text" ID="Y0" value="0" placeholder="Enter Y0">
@@ -139,13 +139,12 @@
                 <input type="text" ID="q" value="1" placeholder="Enter q">
                 <label for="m">Масса</label>
                 <input type="text" ID="m" value="1" placeholder="Enter m">
-                <button class="btn btn-danger my-1" id="button_start" onclick="start()">Отобразить</button>
+                <button class="btn btn-danger my-1" id="button_start" onclick="start();">Отобразить</button>
             </div>
 
         </div>
     </div>
 </div>
-
 
 
 <div id="WebGL-output">
